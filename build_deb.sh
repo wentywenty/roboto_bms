@@ -3,7 +3,7 @@ set -e
 # Decoupled & Cross-compile ready Debian package builder
 
 PACKAGE_NAME="roboto-bms"
-VERSION="1.2.0"
+VERSION="1.2.1"
 PREFIX="/opt/roboparty"
 
 # 1. Determine Architecture (Allow override for cross-compiling)

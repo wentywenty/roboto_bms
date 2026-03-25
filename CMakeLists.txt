@@ -57,6 +57,11 @@ install(TARGETS bms tws_bms
     RUNTIME DESTINATION bin
 )
 
+# Install our custom Config for non-ROS consumers (Deb mode)
+install(FILES cmake/roboto_bmsConfig.cmake
+  DESTINATION lib/cmake/roboto_bms
+)
+
 set(PYTHON_INSTALL_DIR "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
 install(TARGETS bms_py
     LIBRARY DESTINATION ${PYTHON_INSTALL_DIR}
