@@ -35,11 +35,11 @@ jobs:
       - name: Upload deb artifact
         uses: actions/upload-artifact@v4
         with:
-          name: bms-daemon-arm64-deb
-          path: bms-daemon_*.deb
+          name: roboto-bms-arm64-deb
+          path: roboto-bms_*.deb
 
       - name: Upload to GitHub Release
         if: startsWith(github.ref, 'refs/tags/bms-v')
         uses: softprops/action-gh-release@v2
         with:
-          files: bms-daemon_*.deb
+          files: roboto-bms_*.deb
