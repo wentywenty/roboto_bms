@@ -1,4 +1,4 @@
-Package: bms-daemon
+Package: roboto-bms
 Version: VERSION_PLACEHOLDER
 Section: base
 Priority: optional
