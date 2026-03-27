@@ -66,16 +66,30 @@ bool BmsProtocol::open() {
     serial_fd_ = ::open(port_name_.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
     if (serial_fd_ < 0) return false;
     struct termios options;
-    tcgetattr(serial_fd_, &options);
+    if (tcgetattr(serial_fd_, &options) != 0) {
+        close_port();
+        return false;
+    }
     speed_t baud = (baud_rate_ == 9600) ? B9600 : B115200;
     cfsetispeed(&options, baud);
     cfsetospeed(&options, baud);
-    options.c_cflag |= (CLOCAL | CREAD | CS8);
-    options.c_cflag &= ~(PARENB | CSTOPB | CSIZE);
+
+    // Modbus RTU standard serial mode: 8N1
+    options.c_cflag |= (CLOCAL | CREAD);
+    options.c_cflag &= ~(PARENB | CSTOPB | CSIZE | CRTSCTS);
+    options.c_cflag |= CS8;
+
     options.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
     options.c_iflag &= ~(IXON | IXOFF | IXANY); // Disable flow control
     options.c_oflag &= ~OPOST;
-    tcsetattr(serial_fd_, TCSANOW, &options);
+
+    options.c_cc[VMIN] = 0;
+    options.c_cc[VTIME] = 0;
+
+    if (tcsetattr(serial_fd_, TCSANOW, &options) != 0) {
+        close_port();
+        return false;
+    }
     fcntl(serial_fd_, F_SETFL, FNDELAY);
     return true;
 }

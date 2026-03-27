@@ -3,8 +3,9 @@ set -e
 # Decoupled & Cross-compile ready Debian package builder
 
 PACKAGE_NAME="roboto-bms"
-VERSION="1.2.1"
+VERSION="1.2.2"
 PREFIX="/opt/roboparty"
+FIRMWARE_FILE="firmware/firmware.bin"
 
 # 1. Determine Architecture (Allow override for cross-compiling)
 if [ -z "$ARCH" ]; then
@@ -40,6 +41,7 @@ rm -rf ${DEB_DIR} ${DEB_DIR}.deb
 mkdir -p ${DEB_DIR}/DEBIAN
 mkdir -p ${DEB_DIR}${PREFIX}
 mkdir -p ${DEB_DIR}${PREFIX}/bin
+mkdir -p ${DEB_DIR}${PREFIX}/lib/firmware
 mkdir -p ${DEB_DIR}/etc/systemd/system
 mkdir -p ${DEB_DIR}/etc/default
 
@@ -50,9 +52,14 @@ fi
 
 # Copy Binary and templates
 cp scripts/bms_ota.py ${DEB_DIR}${PREFIX}/bin/
-cp service/bms.service ${DEB_DIR}/etc/systemd/system/
-cp service/bms_ota.service ${DEB_DIR}/etc/systemd/system/
-cp config/bms_daemon.default ${DEB_DIR}/etc/default/bms_daemon
+cp -a etc/systemd/system/* ${DEB_DIR}/etc/systemd/system/
+cp etc/default/bms_daemon.default ${DEB_DIR}/etc/default/bms_daemon
+
+if [ ! -f "${FIRMWARE_FILE}" ]; then
+    echo ">>> Error: firmware file not found: ${FIRMWARE_FILE}"
+    exit 1
+fi
+cp "${FIRMWARE_FILE}" ${DEB_DIR}${PREFIX}/lib/firmware/
 
 # Copy DEBIAN maintainer scripts
 cp debian/postinst ${DEB_DIR}/DEBIAN/

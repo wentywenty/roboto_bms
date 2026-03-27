@@ -3,7 +3,7 @@ Version: VERSION_PLACEHOLDER
 Section: base
 Priority: optional
 Architecture: ARCH_PLACEHOLDER
-Depends: roboto-base (>= 1.0.0)
+Depends: roboto-base (>= 1.0.0), python3, python3-serial
 Maintainer: wentywenty <2321901849@qq.com>
 Description: BMS Heartbeat Daemon with serial port config.
  Provides a Unix Domain Socket (/tmp/bms.sock) for clients.

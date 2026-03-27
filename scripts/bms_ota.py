@@ -55,10 +55,6 @@ class BmsOta:
         
         self.log(f"开始升级固件: {self.bin_path} ({len(self.bin_data)} 字节)")
 
-        self.log("正在停止 bms.service...")
-        subprocess.run(["sudo", "systemctl", "stop", "bms"], check=False)
-        time.sleep(1)
-
         try:
             self.ser = serial.Serial(self.port, 115200, timeout=1)
             
@@ -106,18 +102,16 @@ class BmsOta:
                 offset += actual_len
                 pkt_idx += 1
                 progress = (offset / total_size) * 100
-                sys.stdout.write(f"进度: [{pkt_idx}] {progress:.1f}%")
+                sys.stdout.write(f"\r进度: [{pkt_idx}] {progress:.1f}%")
                 sys.stdout.flush()
 
-            self.log("
-升级完成！等待 BMS 复位...", "\033[1;32m")
+            sys.stdout.write("\n")
+            self.log("升级完成！等待 BMS 复位...", "\033[1;32m")
             time.sleep(5)
             return True
 
         finally:
             if self.ser: self.ser.close()
-            self.log("正在重新启动 bms.service...")
-            subprocess.run(["sudo", "systemctl", "start", "bms"], check=False)
 
 if __name__ == "__main__":
     port_arg = sys.argv[1] if len(sys.argv) > 1 else "/etc/default/bms_daemon"
@@ -128,6 +122,6 @@ if __name__ == "__main__":
                     port_arg = line.split("=")[1].strip()
                     break
     
-    bin_file = sys.argv[2] if len(sys.argv) > 2 else "/opt/bms/firmware.bin"
+    bin_file = sys.argv[2] if len(sys.argv) > 2 else "/opt/roboparty/lib/firmware/firmware.bin"
     ota = BmsOta(port_arg, bin_file)
     ota.run()
