@@ -1,4 +1,4 @@
-#include "bms_protocol.hpp"
+#include "bms_driver.hpp"
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -150,7 +150,7 @@ bool BmsProtocol::read_response(std::vector<uint8_t>& buffer, int expected_bytes
     return (total_read == expected_bytes);
 }
 
-bool BmsProtocol::read_basic_info(BatteryStatus& status) {
+bool BmsProtocol::read_basic_info(bms::BatteryStatus& status) {
     tcflush(serial_fd_, TCIOFLUSH);
     send_read_request(0x9000, 15);
     std::vector<uint8_t> buf;
@@ -167,7 +167,7 @@ bool BmsProtocol::read_basic_info(BatteryStatus& status) {
     return false;
 }
 
-bool BmsProtocol::read_version_info(BatteryStatus& status) {
+bool BmsProtocol::read_version_info(bms::BatteryStatus& status) {
     tcflush(serial_fd_, TCIOFLUSH);
     send_read_request(REG_VERSION_SW, 2);
     std::vector<uint8_t> resp;
@@ -188,7 +188,7 @@ bool BmsProtocol::read_version_info(BatteryStatus& status) {
     return false;
 }
 
-bool BmsProtocol::read_capacity_info(BatteryStatus& status) {
+bool BmsProtocol::read_capacity_info(bms::BatteryStatus& status) {
     tcflush(serial_fd_, TCIOFLUSH);
     send_read_request(0x9028, 4); 
     std::vector<uint8_t> buf;

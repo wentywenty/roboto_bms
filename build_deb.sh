@@ -3,9 +3,9 @@ set -e
 # Decoupled & Cross-compile ready Debian package builder
 
 PACKAGE_NAME="roboto-bms"
-VERSION="1.2.2"
+VERSION="1.2.3"
 PREFIX="/opt/roboparty"
-FIRMWARE_FILE="firmware/firmware.bin"
+FIRMWARE_FILE="firmware/LB-13S2P_APP_v003_20260326-01.bin"
 
 # 1. Determine Architecture (Allow override for cross-compiling)
 if [ -z "$ARCH" ]; then

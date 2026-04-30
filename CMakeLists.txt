@@ -26,10 +26,10 @@ add_subdirectory(src/drivers)
 
 # ---- Daemon executable ----
 add_executable(bms_daemon
-    src/main.cpp
+    src/bms_daemon.cpp
 )
 target_include_directories(bms_daemon PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(bms_daemon PRIVATE tws_bms_protocol pthread)
+target_link_libraries(bms_daemon PRIVATE tws_bms_protocol fmt::fmt spdlog::spdlog pthread)
 
 # ---- Client library ----
 add_library(bms STATIC

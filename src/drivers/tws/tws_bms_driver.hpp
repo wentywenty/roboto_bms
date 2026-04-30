@@ -6,7 +6,6 @@
 #include <thread>
 
 #include "bms_driver.hpp"
-#include "bms_status.h"
 
 class TwsBmsDriver : public BmsDriver {
    public:

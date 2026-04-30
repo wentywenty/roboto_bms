@@ -8,8 +8,7 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <cstring>
-#include "bms_status.h"
-#include "bms_protocol.hpp"
+#include "bms_driver.hpp"
 
 #define SOCKET_PATH "/tmp/bms.sock"
 
@@ -38,7 +37,7 @@ int main(int argc, char** argv) {
     if (!g_running) return 0;
 
     /* Print Static Info at Startup */
-    tws_bms::BatteryStatus static_info;
+    bms::BatteryStatus static_info;
     if (bms_proto.read_version_info(static_info)) {
         std::cout << "\033[1;32m[BMS Daemon] Connected to BMS.\033[0m" << std::endl;
         std::cout << " > FW Version: 0x" << std::hex << static_info.sw_version << " | HW Version: 0x" << static_info.hw_version << std::dec << std::endl;
@@ -83,7 +82,7 @@ int main(int argc, char** argv) {
 
     while (g_running) {
         /* 1. Fetch data from BMS (This acts as the heartbeat) */
-        tws_bms::BatteryStatus raw_data;
+        bms::BatteryStatus raw_data;
         bool ok_basic = bms_proto.read_basic_info(raw_data);
         usleep(50000); // Wait 50ms between requests to avoid bus congestion
         bool ok_capacity = bms_proto.read_capacity_info(raw_data);
